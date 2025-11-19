@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { requireUser } from "../middleware/auth";
+import { requireUser } from "../middleware/auth.ts.old";
 import { listSheets, createSheet } from "../services/sheetsService";
 
 export const sheetsRouter = Router();

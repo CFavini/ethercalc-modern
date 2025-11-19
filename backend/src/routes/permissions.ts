@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { requireUser } from "../middleware/auth";
+import { requireUser } from "../middleware/auth.ts.old";
 import { getPermissions } from "../services/permissionsService";
 
 export const permissionsRouter = Router();
