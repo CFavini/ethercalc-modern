@@ -25,7 +25,8 @@ export default function DashboardPage() {
 
       setUser(data.user);
 
-      const list = await listSheets();
+     // const list = await listSheets();
+     const list = await listSheets(data.user.id);
       setSheets(list);
       setLoadingSheets(false);
     }

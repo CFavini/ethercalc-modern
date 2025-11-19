@@ -1,0 +1,59 @@
+import { Router } from "express";
+import { supabase } from "../config/supabase";
+
+const router = Router();
+
+/**
+ * GET /sheets — Lista planilhas do usuário logado
+ */
+router.get("/", async (req, res) => {
+  const userId = req.headers["x-user-id"] as string;
+
+  if (!userId) {
+    return res.status(401).json({ error: "Missing x-user-id header" });
+  }
+
+  const { data, error } = await supabase
+    .from("sheets")
+    .select("*")
+    .eq("owner_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Erro Supabase GET /sheets:", error);
+    return res.status(500).json({ error: "Erro ao carregar planilhas" });
+  }
+
+  return res.json(data);
+});
+
+/**
+ * POST /sheets — Cria uma nova planilha
+ */
+router.post("/", async (req, res) => {
+  const userId = req.headers["x-user-id"] as string;
+  const { title } = req.body;
+
+  if (!userId) {
+    return res.status(401).json({ error: "Missing x-user-id header" });
+  }
+
+  if (!title) {
+    return res.status(400).json({ error: "Missing title" });
+  }
+
+  const { data, error } = await supabase
+    .from("sheets")
+    .insert([{ title, owner_id: userId }])
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Erro Supabase POST /sheets:", error);
+    return res.status(500).json({ error: "Erro ao criar planilha" });
+  }
+
+  return res.json(data);
+});
+
+export default router;

@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
 
-export async function listSheets() {
+/* export async function listSheets() {
   const { data, error } = await supabase
     .from("sheets")
     .select("*")
@@ -8,6 +8,22 @@ export async function listSheets() {
 
   if (error) throw error;
   return data;
+} */
+/*import { supabase } from "@/lib/supabaseClient";*/
+
+export async function listSheets(userId: string) {
+  const { data, error } = await supabase
+    .from("sheets")
+    .select("*")
+    .eq("owner_id", userId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Erro ao carregar planilhas:", error);
+    return [];
+  }
+
+  return data || [];
 }
 
 export async function createSheet(title: string) {
